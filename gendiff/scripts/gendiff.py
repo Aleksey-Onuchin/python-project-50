@@ -1,5 +1,5 @@
 import argparse
-import json
+from gendiff.scripts.parsing_module import parsing_files
 
 
 def main():
@@ -14,9 +14,7 @@ def main():
 
 
 def generate_diff(first_file, second_file):
-    file1 = json.load(open(first_file))
-    file2 = json.load(open(second_file))
-    keys = sorted(set(file1.keys() | set(file2.keys())))
+    file1, file2, keys = parsing_files(first_file, second_file)
     result = ''
     for key in keys:
         if file1.get(key) is None:
