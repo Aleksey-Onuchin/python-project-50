@@ -18,14 +18,14 @@ def generate_diff(first_file, second_file):
     result = ''
     for key in keys:
         if file1.get(key) is None:
-            result += f"+ {key}: {file2[key]}\n"
+            result += f"  + {key}: {file2[key]}\n"
         elif file1.get(key) is not None and file2.get(key) is None:
-            result += f"- {key}: {file1[key]}\n"
+            result += f"  - {key}: {file1[key]}\n"
         elif file1.get(key) == file2.get(key):
-            result += f"  {key}: {file1[key]}\n"
+            result += f"    {key}: {file1[key]}\n"
         else:
-            result += f"- {key}: {file1[key]}\n+ {key}: {file2[key]}\n"
-    return result.strip().lower()
+            result += f"  - {key}: {file1[key]}\n  + {key}: {file2[key]}\n"
+    return f"{{\n{result.rstrip().lower()}\n}}"
 
 
 if __name__ == '__main__':
