@@ -12,5 +12,4 @@ def parsing_files(first_file, second_file):
         f2 = open(second_file, 'r')
         file1 = yaml.load(f1, Loader=SafeLoader)
         file2 = yaml.load(f2, Loader=SafeLoader)
-    keys = sorted(set(file1.keys() | set(file2.keys())))
-    return (file1, file2, keys)
+    return (file1, file2)
