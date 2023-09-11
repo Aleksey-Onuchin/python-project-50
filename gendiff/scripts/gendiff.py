@@ -179,7 +179,7 @@ def stylish(keys_list, diff):
                                      '/' + elem['key'], 'no')
                                 result += f"{int(elem['depth']) * 4 * ' '}}}\n"
                             else:
-                                result += (f"{(((int(elem['depth']) * 4) -2) * ' ')}"
+                                result += (f"{(((int(elem['depth']) * 4) -2) * ' ')}" # noqa
                                            f"- {elem['key']}: {{\n")
                                 walk(elem['value'], diff, parent +
                                      '/' + elem['key'], 'no')
@@ -193,7 +193,7 @@ def stylish(keys_list, diff):
                                            f"{elem['key']}: "
                                            f"{fixing_values(elem['value'])}\n")
                             else:
-                                result += (f"{(((int(elem['depth']) * 4) -2) * ' ')}"
+                                result += (f"{(((int(elem['depth']) * 4) -2) * ' ')}" # noqa
                                            f"- {elem['key']}: "
                                            f"{fixing_values(elem['value'])}\n")
                         else:
@@ -207,7 +207,7 @@ def stylish(keys_list, diff):
                                      '/' + elem['key'], 'no')
                                 result += f"{int(elem['depth']) * 4 * ' '}}}\n"
                             else:
-                                result += (f"{(((int(elem['depth']) * 4) -2) * ' ')}"
+                                result += (f"{(((int(elem['depth']) * 4) -2) * ' ')}" # noqa
                                            f"+ {elem['key']}: {{\n")
                                 walk(elem['value'], diff, parent +
                                      '/' + elem['key'], 'no')
@@ -221,7 +221,7 @@ def stylish(keys_list, diff):
                                            f"{elem['key']}: "
                                            f"{fixing_values(elem['value'])}\n")
                             else:
-                                result += (f"{(((int(elem['depth']) * 4) -2) * ' ')}"
+                                result += (f"{(((int(elem['depth']) * 4) -2) * ' ')}" # noqa
                                            f"+ {elem['key']}: "
                                            f"{fixing_values(elem['value'])}\n")
                         else:
@@ -234,7 +234,7 @@ def generate_diff(first_file, second_file, formatter):
     dict_file1, dict_file2 = parsing_files(first_file, second_file)
     general_keys_list = general_list_of_keys(dict_file1, dict_file2)
     first_level_keys_list = general_first_level_keys(dict_file1, dict_file2)
-    diff = make_diff(general_keys_list, prep_diff(dict_file1), prep_diff(dict_file2))
+    diff = make_diff(general_keys_list, prep_diff(dict_file1), prep_diff(dict_file2)) # noqa
     if formatter == 'stylish':
         return stylish(first_level_keys_list, diff)
 
