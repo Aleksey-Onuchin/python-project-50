@@ -10,7 +10,7 @@ def main():
     parser.add_argument('-f', '--format', type=str,
                         default='stylish', help='set format of output')
     args = parser.parse_args()
-    return generate_diff(args.first_file, args.second_file, args.format)
+    return generate_diff(args.format, args.first_file, args.second_file)
 
 
 def prep_diff(dict_file):
@@ -28,7 +28,7 @@ def prep_diff(dict_file):
                 res.append({'key': key, 'depth': depth,
                             'type': 'dict', 'value': children,
                             'parent': parent})
-                walk(node[key], depth + 1, parent + '/' + key)
+                walk(node[key], depth + 1, parent + '.' + key)
         return res
     return walk(dict_file, 1, '')
 
@@ -150,6 +150,17 @@ def fixing_values(value):
         return value
 
 
+def fixing_values2(value):
+    if value is None:
+        return 'null'
+    elif value is True:
+        return 'true'
+    elif value is False:
+        return 'false'
+    else:
+        return f"'{value}'"
+
+
 def stylish(keys_list, diff):
     result = ''
 
@@ -164,7 +175,7 @@ def stylish(keys_list, diff):
                         result += (f"{int(elem['depth']) * 4 * ' '}"
                                    f"{elem['key']}: {{\n")
                         walk(elem['value'], diff, parent +
-                             '/' + elem['key'], '')
+                             '.' + elem['key'], '')
                         result += f"{int(elem['depth']) * 4 * ' '}}}\n"
                     elif elem['status'] == 'stay' and elem['type'] == 'value':
                         result += (f"{int(elem['depth']) * 4 * ' '}"
@@ -176,13 +187,13 @@ def stylish(keys_list, diff):
                                 result += (f"{((int(elem['depth']) * 4) * ' ')}"
                                            f"{elem['key']}: {{\n")
                                 walk(elem['value'], diff, parent +
-                                     '/' + elem['key'], 'no')
+                                     '.' + elem['key'], 'no')
                                 result += f"{int(elem['depth']) * 4 * ' '}}}\n"
                             else:
                                 result += (f"{(((int(elem['depth']) * 4) -2) * ' ')}" # noqa
                                            f"- {elem['key']}: {{\n")
                                 walk(elem['value'], diff, parent +
-                                     '/' + elem['key'], 'no')
+                                     '.' + elem['key'], 'no')
                                 result += f"{int(elem['depth']) * 4 * ' '}}}\n"
                         else:
                             pass
@@ -204,13 +215,13 @@ def stylish(keys_list, diff):
                                 result += (f"{((int(elem['depth']) * 4) * ' ')}"
                                            f"{elem['key']}: {{\n")
                                 walk(elem['value'], diff, parent +
-                                     '/' + elem['key'], 'no')
+                                     '.' + elem['key'], 'no')
                                 result += f"{int(elem['depth']) * 4 * ' '}}}\n"
                             else:
                                 result += (f"{(((int(elem['depth']) * 4) -2) * ' ')}" # noqa
                                            f"+ {elem['key']}: {{\n")
                                 walk(elem['value'], diff, parent +
-                                     '/' + elem['key'], 'no')
+                                     '.' + elem['key'], 'no')
                                 result += f"{int(elem['depth']) * 4 * ' '}}}\n"
                         else:
                             pass
@@ -230,13 +241,61 @@ def stylish(keys_list, diff):
     return walk(keys_list, diff, '', '')
 
 
-def generate_diff(first_file, second_file, formatter):
+def plain(keys_list, diff):
+    result = ''
+
+    def walk(keys_list, diff, parent, marker):
+        nonlocal result
+        keys_list = list(keys_list)
+        keys_list.sort()
+        for key in keys_list:
+            diff_temp = []
+            for elem in diff:
+                if elem['key'] == key:
+                    diff_temp.append(elem)
+                    if elem['status'] == 'stay' and elem['type'] == 'dict':
+                        walk(elem['value'], diff, parent +
+                             '.' + elem['key'], '')
+            # print(key, diff_temp)
+            if len(diff_temp) == 1:
+                if diff_temp[0]['status'] == 'added':
+                    if diff_temp[0]['type'] == 'dict':
+                        result += (f"Property "
+                                   f"'{(diff_temp[0]['parent'] + '.' + diff_temp[0]['key'])[1:]}'" # noqa
+                                   f" was added with value: [complex value]\n")
+                    else:
+                        result += (f"Property "
+                                   f"'{(diff_temp[0]['parent'] + '.' + diff_temp[0]['key'])[1:]}'" # noqa
+                                   f" was added with value: "
+                                   f"{fixing_values2(diff_temp[0]['value'])}\n")
+                if diff_temp[0]['status'] == 'removed':
+                    result += (f"Property "
+                               f"'{(diff_temp[0]['parent'] + '.' + diff_temp[0]['key'])[1:]}'" # noqa
+                               f" was removed\n")
+            else:
+                value1 = '[complex value]' \
+                    if diff_temp[0]['type'] == 'dict' \
+                    else fixing_values2(diff_temp[0]['value'])
+                value2 = '[complex value]' \
+                    if diff_temp[1]['type'] == 'dict' \
+                    else fixing_values2(diff_temp[1]['value'])
+                result += (f"Property "
+                           f"'{(diff_temp[0]['parent'] + '.' + diff_temp[0]['key'])[1:]}'" # noqa
+                           f" was updated. From {value1} to {value2}\n")
+
+        return result.rstrip()
+    return walk(keys_list, diff, '', '')
+
+
+def generate_diff(formatter, first_file, second_file):
     dict_file1, dict_file2 = parsing_files(first_file, second_file)
     general_keys_list = general_list_of_keys(dict_file1, dict_file2)
     first_level_keys_list = general_first_level_keys(dict_file1, dict_file2)
     diff = make_diff(general_keys_list, prep_diff(dict_file1), prep_diff(dict_file2)) # noqa
     if formatter == 'stylish':
         return stylish(first_level_keys_list, diff)
+    elif formatter == 'plain':
+        return plain(first_level_keys_list, diff)
 
 
 if __name__ == '__main__':
