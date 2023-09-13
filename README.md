@@ -6,7 +6,7 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/885fa6645ccad79efdbb/test_coverage)](https://codeclimate.com/github/Aleksey-Onuchin/python-project-50/test_coverage)
 
 Work example:
-[![asciicast](https://asciinema.org/a/tB5bnJK3RgKoJWkCV4pVCPFwd.svg)](https://asciinema.org/a/tB5bnJK3RgKoJWkCV4pVCPFwd)
+[![asciicast](https://asciinema.org/a/tt7An6orA1VKid25ImAxslhOp.svg)](https://asciinema.org/a/tt7An6orA1VKid25ImAxslhOp)
 
 
 https://github.com/Aleksey-Onuchin/python-project-50/actions/workflows/code-check.yml/badge.svg
