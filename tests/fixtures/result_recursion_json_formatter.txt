@@ -1,0 +1,30 @@
+{"key": "abc", "depth": 2, "type": "value", "value": 12345, "parent": ".group2", "status": "removed"}
+{"key": "baz", "depth": 2, "type": "value", "value": "bas", "parent": ".group1", "status": "removed"}
+{"key": "baz", "depth": 2, "type": "value", "value": "bars", "parent": ".group1", "status": "added"}
+{"key": "common", "depth": 1, "type": "dict", "value": ["follow", "setting1", "setting2", "setting3", "setting4", "setting5", "setting6"], "parent": "", "status": "stay"}
+{"key": "deep", "depth": 2, "type": "dict", "value": ["id"], "parent": ".group2", "status": "removed"}
+{"key": "deep", "depth": 2, "type": "dict", "value": ["id"], "parent": ".group3", "status": "added"}
+{"key": "doge", "depth": 3, "type": "dict", "value": ["wow"], "parent": ".common.setting6", "status": "stay"}
+{"key": "fee", "depth": 2, "type": "value", "value": 100500, "parent": ".group3", "status": "added"}
+{"key": "follow", "depth": 2, "type": "value", "value": false, "parent": ".common", "status": "added"}
+{"key": "foo", "depth": 2, "type": "value", "value": "bar", "parent": ".group1", "status": "stay"}
+{"key": "group1", "depth": 1, "type": "dict", "value": ["baz", "foo", "nest"], "parent": "", "status": "stay"}
+{"key": "group2", "depth": 1, "type": "dict", "value": ["abc", "deep"], "parent": "", "status": "removed"}
+{"key": "group3", "depth": 1, "type": "dict", "value": ["deep", "fee"], "parent": "", "status": "added"}
+{"key": "id", "depth": 3, "type": "value", "value": 45, "parent": ".group2.deep", "status": "removed"}
+{"key": "id", "depth": 3, "type": "dict", "value": ["number"], "parent": ".group3.deep", "status": "added"}
+{"key": "key", "depth": 3, "type": "value", "value": "value", "parent": ".common.setting6", "status": "stay"}
+{"key": "key5", "depth": 3, "type": "value", "value": "value5", "parent": ".common.setting5", "status": "added"}
+{"key": "nest", "depth": 2, "type": "dict", "value": ["key"], "parent": ".group1", "status": "removed"}
+{"key": "nest", "depth": 2, "type": "value", "value": "str", "parent": ".group1", "status": "added"}
+{"key": "number", "depth": 4, "type": "value", "value": 45, "parent": ".group3.deep.id", "status": "added"}
+{"key": "ops", "depth": 3, "type": "value", "value": "vops", "parent": ".common.setting6", "status": "added"}
+{"key": "setting1", "depth": 2, "type": "value", "value": "Value 1", "parent": ".common", "status": "stay"}
+{"key": "setting2", "depth": 2, "type": "value", "value": 200, "parent": ".common", "status": "removed"}
+{"key": "setting3", "depth": 2, "type": "value", "value": true, "parent": ".common", "status": "removed"}
+{"key": "setting3", "depth": 2, "type": "value", "value": null, "parent": ".common", "status": "added"}
+{"key": "setting4", "depth": 2, "type": "value", "value": "blah blah", "parent": ".common", "status": "added"}
+{"key": "setting5", "depth": 2, "type": "dict", "value": ["key5"], "parent": ".common", "status": "added"}
+{"key": "setting6", "depth": 2, "type": "dict", "value": ["doge", "key", "ops"], "parent": ".common", "status": "stay"}
+{"key": "wow", "depth": 4, "type": "value", "value": "", "parent": ".common.setting6.doge", "status": "removed"}
+{"key": "wow", "depth": 4, "type": "value", "value": "so much", "parent": ".common.setting6.doge", "status": "added"}

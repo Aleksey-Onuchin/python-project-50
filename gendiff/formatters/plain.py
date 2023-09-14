@@ -24,7 +24,6 @@ def plain(keys_list, diff):
                     if elem['status'] == 'stay' and elem['type'] == 'dict':
                         walk(elem['value'], diff, parent +
                              '.' + elem['key'], '')
-            # print(key, diff_temp)
             if len(diff_temp) == 1:
                 if diff_temp[0]['status'] == 'added':
                     if diff_temp[0]['type'] == 'dict':
@@ -50,6 +49,6 @@ def plain(keys_list, diff):
                 result += (f"Property "
                            f"'{(diff_temp[0]['parent'] + '.' + diff_temp[0]['key'])[1:]}'" # noqa
                            f" was updated. From {value1} to {value2}\n")
-
         return result.rstrip()
+
     return walk(keys_list, diff, '', '')

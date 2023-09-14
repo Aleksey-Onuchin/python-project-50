@@ -2,6 +2,7 @@ import argparse
 from gendiff.scripts.parsing_module import parsing_files
 from gendiff.formatters.stylish import stylish
 from gendiff.formatters.plain import plain
+from gendiff.formatters.json_formatter import json_formatter
 
 
 def main():
@@ -150,6 +151,8 @@ def generate_diff(formatter, first_file, second_file):
         return stylish(first_level_keys_list, diff)
     elif formatter == 'plain':
         return plain(first_level_keys_list, diff)
+    elif formatter == 'json_formatter':
+        return json_formatter(diff)
 
 
 if __name__ == '__main__':
