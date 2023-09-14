@@ -142,7 +142,7 @@ def general_first_level_keys(file1, file2):
     return first_level_keys_list
 
 
-def generate_diff(first_file, second_file, formatter):
+def generate_diff(first_file, second_file, formatter='stylish'):
     dict_file1, dict_file2 = parsing_files(first_file, second_file)
     general_keys_list = general_list_of_keys(dict_file1, dict_file2)
     first_level_keys_list = general_first_level_keys(dict_file1, dict_file2)
