@@ -10,5 +10,5 @@ def formatter_processing(diff, dict_file1, dict_file2, formatter):
         return stylish(first_level_keys, diff)
     elif formatter == 'plain':
         return plain(first_level_keys, diff)
-    elif formatter == 'json_formatter':
+    elif formatter == 'json':
         return json_formatter(diff)
