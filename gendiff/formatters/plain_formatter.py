@@ -6,49 +6,52 @@ def fixing_values(value):
     elif value is False:
         return 'false'
     else:
-        return f"'{value}'"
+        return value if type(value) is int else f"'{value}'"
 
 
 def plain(keys_list, diff):
     result = ''
 
-    def walk(keys_list, diff, parent, marker):
+    def walk(keys_list, diff, parents, marker):
         nonlocal result
         keys_list = list(keys_list)
         keys_list.sort()
         for key in keys_list:
-            diff_temp = []
+            temp_list = []
             for elem in diff:
-                if elem['key'] == key:
-                    diff_temp.append(elem)
-                    if elem['status'] == 'stay' and elem['type'] == 'dict':
-                        walk(elem['value'], diff, parent +
-                             '.' + elem['key'], '')
-            if len(diff_temp) == 1:
-                if diff_temp[0]['status'] == 'added':
-                    if diff_temp[0]['type'] == 'dict':
-                        result += (f"Property "
-                                   f"'{(diff_temp[0]['parent'] + '.' + diff_temp[0]['key'])[1:]}'" # noqa
-                                   f" was added with value: [complex value]\n")
+                if elem['key'] == key and elem['parents'] == parents:
+                    temp_list.append(elem)
+                    if (elem['status'] == 'stay'
+                            or elem['status'] == 'modified')\
+                            and elem['type'] == 'dict':
+                        walk(elem['children'],
+                             diff, parents + '.' + elem['key'], '')
+            if len(temp_list) == 1:
+                if temp_list[0]['status'] == 'added':
+                    if temp_list[0]['type'] == 'dict':
+                        result += (f"Property '"
+                                   f"{(temp_list[0]['parents'] + '.' + temp_list[0]['key'])[1:]}" # noqa
+                                   f"' was added with value: [complex value]\n")
                     else:
-                        result += (f"Property "
-                                   f"'{(diff_temp[0]['parent'] + '.' + diff_temp[0]['key'])[1:]}'" # noqa
-                                   f" was added with value: "
-                                   f"{fixing_values(diff_temp[0]['value'])}\n")
-                if diff_temp[0]['status'] == 'removed':
-                    result += (f"Property "
-                               f"'{(diff_temp[0]['parent'] + '.' + diff_temp[0]['key'])[1:]}'" # noqa
-                               f" was removed\n")
+                        result += (f"Property '"
+                                   f"{(temp_list[0]['parents'] + '.' + temp_list[0]['key'])[1:]}" # noqa
+                                   f"' was added with value: {fixing_values(temp_list[0]['value'])}\n") # noqa
+                if temp_list[0]['status'] == 'removed':
+                    result += (f"Property '"
+                               f"{(temp_list[0]['parents'] + '.' + temp_list[0]['key'])[1:]}" # noqa
+                               f"' was removed\n")
             else:
-                value1 = '[complex value]' \
-                    if diff_temp[0]['type'] == 'dict' \
-                    else fixing_values(diff_temp[0]['value'])
-                value2 = '[complex value]' \
-                    if diff_temp[1]['type'] == 'dict' \
-                    else fixing_values(diff_temp[1]['value'])
-                result += (f"Property "
-                           f"'{(diff_temp[0]['parent'] + '.' + diff_temp[0]['key'])[1:]}'" # noqa
-                           f" was updated. From {value1} to {value2}\n")
+                for element in temp_list:
+                    if element['status'] == 'removed':
+                        value1 = '[complex value]'\
+                            if element['type'] == 'dict'\
+                            else fixing_values(element['value'])
+                    elif element['status'] == 'added':
+                        value2 = '[complex value]'\
+                            if element['type'] == 'dict'\
+                            else fixing_values(element['value'])
+                result += (f"Property '"
+                           f"{(temp_list[0]['parents'] + '.' + temp_list[0]['key'])[1:]}" # noqa
+                           f"' was updated. From {value1} to {value2}\n")
         return result.rstrip()
-
     return walk(keys_list, diff, '', '')

@@ -7,15 +7,15 @@
 
 ## Work examples:
 # json and yaml files flat
-[![asciicast](https://asciinema.org/a/HBLKsvVQ18G8ULvb22G2lE3ha.svg)](https://asciinema.org/a/HBLKsvVQ18G8ULvb22G2lE3ha)
+[![asciicast](https://asciinema.org/a/H4zK8X23eMUptb6xlDZKhsE3b.svg)](https://asciinema.org/a/H4zK8X23eMUptb6xlDZKhsE3b)
 
 # json and yaml files recursion -f stylish
-[![asciicast](https://asciinema.org/a/ykSNcRrkqoXMSUjW2qYEWAXkR.svg)](https://asciinema.org/a/ykSNcRrkqoXMSUjW2qYEWAXkR)
+[![asciicast](https://asciinema.org/a/tpq8GHxYq3AAagyEZ6ZTO7xvD.svg)](https://asciinema.org/a/tpq8GHxYq3AAagyEZ6ZTO7xvD)
 
 # json and yaml files recursion -f plain
-[![asciicast](https://asciinema.org/a/wHSeRbqO6FxKGSu9hBAjUzO8Y.svg)](https://asciinema.org/a/wHSeRbqO6FxKGSu9hBAjUzO8Y)
+[![asciicast](https://asciinema.org/a/oSSfngNn0vU5CTihUN9TJ77DA.svg)](https://asciinema.org/a/oSSfngNn0vU5CTihUN9TJ77DA)
 
 # json and yaml files recursion -f json_formatter
-[![asciicast](https://asciinema.org/a/gk2JZ2w0GdT9T1ktXBHN33c6e.svg)](https://asciinema.org/a/gk2JZ2w0GdT9T1ktXBHN33c6e)
+[![asciicast](https://asciinema.org/a/ELOzIVcfWgnv9bCs2SO8nl9oy.svg)](https://asciinema.org/a/ELOzIVcfWgnv9bCs2SO8nl9oy)
 
 https://github.com/Aleksey-Onuchin/python-project-50/actions/workflows/code-check.yml/badge.svg
