@@ -9,7 +9,7 @@ def main():
     return generate_diff(first_file, second_file, formatter)
 
 
-def generate_diff(first_file, second_file, formatter):
+def generate_diff(first_file, second_file, formatter='stylish'):
     dict_file1, dict_file2 = parsing_files(first_file, second_file)
     diff = make_diff(dict_file1, dict_file2)
     return formatter_processing(diff, dict_file1, dict_file2, formatter)
