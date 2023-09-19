@@ -20,4 +20,4 @@ def json_formatter(diff):
                         v1 = v
                     temp_dict[k] = v1
                 result += f"{json.dumps(temp_dict)}\n"
-    return result.rstrip()
+    return str(result.rstrip())
