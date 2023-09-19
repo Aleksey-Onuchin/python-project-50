@@ -6,7 +6,7 @@ from gendiff.scripts.formatter_processing import formatter_processing
 
 def main():
     first_file, second_file, formatter = cli()
-    return generate_diff(first_file, second_file, formatter)
+    print(generate_diff(first_file, second_file, formatter))
 
 
 def generate_diff(first_file, second_file, formatter='stylish'):
