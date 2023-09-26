@@ -34,5 +34,3 @@ json and yaml recursion files, plain formatter
 
 json and yaml recursion files, json formatter
 [![asciicast](https://asciinema.org/a/sllzmcwOm24HzuuYmPb89p4au.svg)](https://asciinema.org/a/sllzmcwOm24HzuuYmPb89p4au)
-
-https://github.com/Aleksey-Onuchin/python-project-50/actions/workflows/code-check.yml/badge.svg
