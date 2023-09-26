@@ -9,10 +9,11 @@
 
 #### Description:
 Difference Calculator. Calculates difference between two .json or .yaml files and returns it in the selected format.\
-3 Formatters available:\
-* Stylish formatter - tree structure with the indents, marked by +/-.\
-* Plain formatter - list of changed lines, marked by statuses (added/removed/updated).\
-* Json formatter - returns the .json file, containing the difference.\
+3 Formatters available:
+* Stylish formatter - tree structure with the indents, marked by +/-.
+* Plain formatter - list of changed lines, marked by statuses (added/removed/updated).
+* Json formatter - returns the .json file, containing the difference.
+
 Stylish formatter is the default one.
 
 **How to install:** run 'make package-install'\
