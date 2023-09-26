@@ -1,13 +1,13 @@
-### Hexlet tests and linter status:
+#### Hexlet tests and linter status:
 [![Actions Status](https://github.com/Aleksey-Onuchin/python-project-50/workflows/hexlet-check/badge.svg)](https://github.com/Aleksey-Onuchin/python-project-50/actions)
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/885fa6645ccad79efdbb/maintainability)](https://codeclimate.com/github/Aleksey-Onuchin/python-project-50/maintainability)
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/885fa6645ccad79efdbb/test_coverage)](https://codeclimate.com/github/Aleksey-Onuchin/python-project-50/test_coverage)
 
-### Version: python 3.10.6; poetry 1.5.1
+#### Version: python 3.10.6; poetry 1.5.1
 
-### Description:\
+#### Description:
 Difference Calculator. Calculates difference between two .json or .yaml files and returns it in the selected format.\
 3 Formatters available:\
     -Stylish formatter - tree structure with the indents, marked by +/-.\
@@ -16,10 +16,10 @@ Difference Calculator. Calculates difference between two .json or .yaml files an
 Stylish formatter is the default one.
 
 **How to install:** run 'make package-install'\
-**How to run:** run 'gendiff [-f formatter_name, optional] [.way/to/file1] [.way/to/file2]'\
+**How to run:** run 'gendiff [-f formatter_name-optional] [.way/to/file1] [.way/to/file2]'
 
 
-### Work examples:
+#### Work examples:
 json and yaml files flat
 [![asciicast](https://asciinema.org/a/H4zK8X23eMUptb6xlDZKhsE3b.svg)](https://asciinema.org/a/H4zK8X23eMUptb6xlDZKhsE3b)
 
