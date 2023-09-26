@@ -1,3 +1,6 @@
+import itertools
+
+
 def fixing_values(value):
     if value is None:
         return 'null'
@@ -9,92 +12,36 @@ def fixing_values(value):
         return value
 
 
-def stylish(keys_list, diff):
-    result = ''
+def stylish(keys, diff):
 
-    def walk(keys_list, diff, parents, marker):
-        nonlocal result
-        keys_list = list(keys_list)
-        keys_list.sort()
-        for key in keys_list:
-            for elem in diff:
-                if elem['key'] == key:
-                    if (elem['status'] == 'stay'
-                            or elem['status'] == 'modified')\
-                            and elem['type'] == 'dict'\
-                            and elem['parents'] == parents:
-                        result += (f"{int(elem['depth']) * 4 * ' '}"
-                                   f"{elem['key']}: {{\n")
-                        walk(elem['children'], diff,
-                             parents + '.' + elem['key'], '')
-                        result += f"{int(elem['depth']) * 4 * ' '}}}\n"
-                    elif elem['status'] == 'stay'\
-                            and elem['type'] == 'value'\
-                            and elem['parents'] == parents:
-                        result += (f"{int(elem['depth']) * 4 * ' '}"
-                                   f"{elem['key']}: "
-                                   f"{fixing_values(elem['value'])}\n")
-                    elif elem['status'] == 'removed'\
-                            and elem['type'] == 'dict'\
-                            and elem['parents'] == parents:
-                        if elem['parents'] == parents:
-                            if marker == 'no':
-                                result += (f"{((int(elem['depth']) * 4) * ' ')}"
-                                           f"{elem['key']}: {{\n")
-                                walk(elem['children'], diff,
-                                     parents + '.' + elem['key'], 'no')
-                                result += f"{int(elem['depth']) * 4 * ' '}}}\n"
-                            else:
-                                result += (f"{(((int(elem['depth']) * 4) -2) * ' ')}" # noqa
-                                           f"- {elem['key']}: {{\n")
-                                walk(elem['children'], diff,
-                                     parents + '.' + elem['key'], 'no')
-                                result += f"{int(elem['depth']) * 4 * ' '}}}\n"
+    def walk(children, parents, value, marked_by):
+        if children == '':
+            return f"{fixing_values(value)}"
+        else:
+            children.sort()
+            lines = []
+            for key in children:
+                for elem in diff:
+                    if elem['key'] == key and elem['parents'] == parents:
+                        if marked_by != '':
+                            indent = f"{(elem['depth'] * 4) * ' '}"
+                        elif elem['status'] == 'removed':
+                            indent = f"{(elem['depth'] * 4 - 2) * ' '}- "
+                        elif elem['status'] == 'added':
+                            indent = f"{(elem['depth'] * 4 - 2) * ' '}+ "
+                        else:
+                            indent = f"{(elem['depth'] * 4) * ' '}"
+                        if elem['type'] == 'dict' \
+                                and (elem['status'] == 'added'
+                                     or elem['status'] == 'removed') \
+                                and marked_by == '':
+                            marked_by = elem['key']
+                        lines.append(f"{indent}{elem['key']}: {walk(elem['children'], elem['parents'] + '.' + elem['key'], elem['value'], marked_by)}") # noqa
+                        if marked_by == elem['key']:
+                            marked_by = ''
                         else:
                             pass
-                    elif elem['status'] == 'removed'\
-                            and elem['parents'] == parents:
-                        if elem['parents'] == parents:
-                            if marker == 'no':
-                                result += (f"{((int(elem['depth']) * 4) * ' ')}"
-                                           f"{elem['key']}: "
-                                           f"{fixing_values(elem['value'])}\n")
-                            else:
-                                result += (f"{(((int(elem['depth']) * 4) -2) * ' ')}" # noqa
-                                           f"- {elem['key']}: "
-                                           f"{fixing_values(elem['value'])}\n")
-                        else:
-                            pass
-                    elif elem['status'] == 'added'\
-                            and elem['type'] == 'dict'\
-                            and elem['parents'] == parents:
-                        if elem['parents'] == parents:
-                            if marker == 'no':
-                                result += (f"{((int(elem['depth']) * 4) * ' ')}"
-                                           f"{elem['key']}: {{\n")
-                                walk(elem['children'], diff,
-                                     parents + '.' + elem['key'], 'no')
-                                result += f"{int(elem['depth']) * 4 * ' '}}}\n"
-                            else:
-                                result += (f"{(((int(elem['depth']) * 4) -2) * ' ')}" # noqa
-                                           f"+ {elem['key']}: {{\n")
-                                walk(elem['children'], diff,
-                                     parents + '.' + elem['key'], 'no')
-                                result += f"{int(elem['depth']) * 4 * ' '}}}\n"
-                        else:
-                            pass
-                    elif elem['status'] == 'added'\
-                            and elem['parents'] == parents:
-                        if elem['parents'] == parents:
-                            if marker == 'no':
-                                result += (f"{((int(elem['depth']) * 4) * ' ')}"
-                                           f"{elem['key']}: "
-                                           f"{fixing_values(elem['value'])}\n")
-                            else:
-                                result += (f"{(((int(elem['depth']) * 4) -2) * ' ')}" # noqa
-                                           f"+ {elem['key']}: "
-                                           f"{fixing_values(elem['value'])}\n")
-                        else:
-                            pass
-        return f"{{\n{result.rstrip()}\n}}"
-    return walk(keys_list, diff, '', '')
+                        result = itertools.chain(
+                            '{', lines, [(elem['depth'] - 1) * 4 * ' ' + '}'])
+            return '\n'.join(result)
+    return walk(keys, '', '', '')

@@ -5,6 +5,18 @@
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/885fa6645ccad79efdbb/test_coverage)](https://codeclimate.com/github/Aleksey-Onuchin/python-project-50/test_coverage)
 
+Version: python 3.10.6; poetry 1.5.1
+
+Description: Difference Calculator. Calculates difference between two .json or .yaml files and returns it in the selected format.
+3 Formatters available:
+    -Stylish formatter - tree structure with the indents, marked by +/-.
+    -Plain formatter - list of changed lines, marked by statuses (added/removed/updated).
+    -Json formatter - returns the .json file, containing the difference.
+Stylish fornatter is the default one.
+
+How to install: run 'make package-install'
+How to run: run 'gendiff [-f formatter_name, optional] [.way/to/file1] [.way/to/file2]'
+
 ## Work examples:
 # json and yaml files flat
 [![asciicast](https://asciinema.org/a/H4zK8X23eMUptb6xlDZKhsE3b.svg)](https://asciinema.org/a/H4zK8X23eMUptb6xlDZKhsE3b)

@@ -12,46 +12,35 @@ def fixing_values(value):
 def plain(keys_list, diff):
     result = ''
 
-    def walk(keys_list, diff, parents, marker):
+    def walk(children, parents):
         nonlocal result
-        keys_list = list(keys_list)
-        keys_list.sort()
-        for key in keys_list:
+        children.sort()
+        for key in children:
             temp_list = []
             for elem in diff:
                 if elem['key'] == key and elem['parents'] == parents:
                     temp_list.append(elem)
-                    if (elem['status'] == 'stay'
-                            or elem['status'] == 'modified')\
-                            and elem['type'] == 'dict':
-                        walk(elem['children'],
-                             diff, parents + '.' + elem['key'], '')
-            if len(temp_list) == 1:
-                if temp_list[0]['status'] == 'added':
-                    if temp_list[0]['type'] == 'dict':
-                        result += (f"Property '"
-                                   f"{(temp_list[0]['parents'] + '.' + temp_list[0]['key'])[1:]}" # noqa
-                                   f"' was added with value: [complex value]\n")
-                    else:
-                        result += (f"Property '"
-                                   f"{(temp_list[0]['parents'] + '.' + temp_list[0]['key'])[1:]}" # noqa
-                                   f"' was added with value: {fixing_values(temp_list[0]['value'])}\n") # noqa
-                if temp_list[0]['status'] == 'removed':
-                    result += (f"Property '"
-                               f"{(temp_list[0]['parents'] + '.' + temp_list[0]['key'])[1:]}" # noqa
-                               f"' was removed\n")
-            else:
-                for element in temp_list:
-                    if element['status'] == 'removed':
-                        value1 = '[complex value]'\
-                            if element['type'] == 'dict'\
-                            else fixing_values(element['value'])
-                    elif element['status'] == 'added':
-                        value2 = '[complex value]'\
-                            if element['type'] == 'dict'\
-                            else fixing_values(element['value'])
-                result += (f"Property '"
-                           f"{(temp_list[0]['parents'] + '.' + temp_list[0]['key'])[1:]}" # noqa
-                           f"' was updated. From {value1} to {value2}\n")
+                    if elem['type'] == 'dict' \
+                            and (elem['status'] == 'stay'
+                                 or elem['status'] == 'modified'):
+                        walk(elem['children'], elem['parents'] + '.' + elem['key']) # noqa
+            name = (temp_list[0]['parents'] + '.' + temp_list[0]['key'])[1:]
+            if len(temp_list) == 1 and (temp_list[0]['status'] == 'added'
+                                        or temp_list[0]['status'] == 'removed'):
+                value = fixing_values(
+                    temp_list[0]['value']) if temp_list[0]['type'] != 'dict' else '[complex value]' # noqa
+                last_part = f" with value: {value}" \
+                            if temp_list[0]['status'] == 'added' else ''
+                result += f"Property '{name}' was {temp_list[0]['status']}{last_part}\n" # noqa
+            elif len(temp_list) == 2:
+                elem_from = list(filter(lambda value: value['status'] == 'removed', temp_list)) # noqa
+                value_from = fixing_values(elem_from[0]['value']) \
+                    if elem_from[0]['type'] != 'dict' \
+                    else '[complex value]'
+                elem_to = list(filter(lambda value: value['status'] == 'added', temp_list)) # noqa
+                value_to = fixing_values(elem_to[0]['value']) \
+                    if elem_to[0]['type'] != 'dict' \
+                    else '[complex value]'
+                result += (f"Property '{name}' was updated. From {value_from} to {value_to}\n") # noqa
         return result.rstrip()
-    return walk(keys_list, diff, '', '')
+    return walk(keys_list, '')

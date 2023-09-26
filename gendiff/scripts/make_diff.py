@@ -1,3 +1,6 @@
+import itertools
+
+
 def prepare_file_for_diff(dict_file):
     result = []
 
@@ -17,96 +20,56 @@ def prepare_file_for_diff(dict_file):
     return walk(list(dict_file.keys()), dict_file, 1, '')
 
 
-def keys(dict_file1, dict_file2):
+def keys(*args):
     general_keys = []
     first_level_keys = []
-    for elem in prepare_file_for_diff(dict_file1):
-        general_keys.append(elem['key'])
-        if elem['depth'] == 1:
-            first_level_keys.append(elem['key'])
-    for elem in prepare_file_for_diff(dict_file2):
-        general_keys.append(elem['key'])
-        if elem['depth'] == 1:
-            first_level_keys.append(elem['key'])
+
+    def make_keys_lists(dict_file):
+        for elem in prepare_file_for_diff(dict_file):
+            general_keys.append(elem['key'])
+            if elem['depth'] == 1:
+                first_level_keys.append(elem['key'])
+    for dict_file in args:
+        make_keys_lists(dict_file)
     return list(set(general_keys)), list(set(first_level_keys))
 
 
 def make_diff(dict_file1, dict_file2):
-    general_keys, _ = keys(dict_file1, dict_file2)
-    general_keys.sort()
     result = []
-    for key in general_keys:
-        temp_list1 = []
-        temp_list2 = []
-        for elem1 in prepare_file_for_diff(dict_file1):
-            if elem1['key'] == key:
-                temp_list1.append(elem1)
-        for elem2 in prepare_file_for_diff(dict_file2):
-            if elem2['key'] == key:
-                temp_list2.append(elem2)
-        # print('TL1', temp_list1)
-        if temp_list1 and not temp_list2:
-            for elem1 in temp_list1:
-                elem1['status'] = 'removed'
-                if elem1 not in result:
-                    result.append(elem1)
-        elif not temp_list1 and temp_list2:
-            for elem2 in temp_list2:
-                elem2['status'] = 'added'
-                if elem2 not in result:
-                    result.append(elem2)
-        for elem1 in temp_list1:
-            elem1_temp = dict(elem1)
-            for elem2 in temp_list2:
-                if elem1 == elem2:
-                    elem1_temp['status'] = 'stay'
-                    break
-                elif elem1['type'] == 'dict' and elem2['type'] == 'dict'\
-                        and elem1['parents'] != elem2['parents']:
-                    elem1_temp['status'] = 'removed'
-                elif elem1['type'] == 'dict' and elem2['type'] == 'dict'\
-                        and elem1['parents'] == elem2['parents']:
-                    elem1_temp['status'] = 'modified'
-                    elem1_temp['children'] = list(
-                        set(elem1['children']) | set(elem2['children']))
-                elif (elem1['type'] == 'dict'
-                      and elem2['type'] != 'dict')\
-                    or (elem1['type'] != 'dict'
-                        and elem2['type'] == 'dict'):
-                    elem1_temp['status'] = 'removed'
-                elif elem1['type'] != 'dict'\
-                        and elem2['type'] != 'dict'\
-                        and (elem1['parents'] != elem2['parents']
-                             or elem1['value'] != elem2['value']):
-                    elem1_temp['status'] = 'removed'
-            if elem1_temp not in result:
-                result.append(elem1_temp)
-        for elem2 in temp_list2:
-            elem2_temp = dict(elem2)
-            for elem1 in temp_list1:
-                if elem2 == elem1:
-                    elem2_temp['status'] = 'stay'
-                    break
-                elif elem2['type'] == 'dict'\
-                        and elem1['type'] == 'dict'\
-                        and elem2['parents'] != elem1['parents']:
-                    elem2_temp['status'] = 'added'
-                elif elem2['type'] == 'dict'\
-                        and elem1['type'] == 'dict'\
-                        and elem2['parents'] == elem1['parents']:
-                    elem2_temp['status'] = 'modified'
-                    elem2_temp['children'] = list(
-                        set(elem1['children']) | set(elem2['children']))
-                elif (elem2['type'] == 'dict'
-                        and elem1['type'] != 'dict')\
-                        or (elem2['type'] != 'dict'
-                            and elem1['type'] == 'dict'):
-                    elem2_temp['status'] = 'added'
-                elif elem2['type'] != 'dict'\
-                        and elem1['type'] != 'dict'\
-                        and (elem2['parents'] != elem1['parents']
-                             or elem2['value'] != elem1['value']):
-                    elem2_temp['status'] = 'added'
-            if elem2_temp not in result:
-                result.append(elem2_temp)
-    return result
+    file1 = prepare_file_for_diff(dict_file1)
+    file2 = prepare_file_for_diff(dict_file2)
+
+    def walk(children, parents):
+        nonlocal result
+        children.sort()
+        for key in children:
+            list1 = list(filter(lambda value: value['key'] == key and value['parents'] == parents, file1)) # noqa
+            list2 = list(filter(lambda value: value['key'] == key and value['parents'] == parents, file2)) # noqa
+            if list1 == list2:
+                list1[0]['status'] = 'stay'
+                result.append(list1)
+            elif list1 and not list2:
+                list1[0]['status'] = 'removed'
+                result.append(list1)
+            elif not list1 and list2:
+                list2[0]['status'] = 'added'
+                result.append(list2)
+            elif list1[0]['type'] == 'dict' and list2[0]['type'] == 'dict':
+                list1[0]['status'] = 'modified'
+                children_temp = list1[0]['children'][:]
+                children_temp.extend(list2[0]['children'])
+                common_children = list(set(children_temp))
+                list1[0]['children'] = common_children
+                result.append(list1)
+            else:
+                list1[0]['status'] = 'removed'
+                list2[0]['status'] = 'added'
+                result.append(list1)
+                result.append(list2)
+            list_common = list1[:]
+            list_common.extend(list2)
+            if 'dict' in list(itertools.chain(map(lambda elem: elem['type'], list_common))): # noqa
+                children = list(set(itertools.chain(*(map(lambda elem: elem['children'], list_common))))) # noqa
+                walk(children, parents + '.' + key)
+        return list(itertools.chain(*result))
+    return walk((keys(dict_file1, dict_file2))[1], '')

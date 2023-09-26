@@ -4,12 +4,11 @@ from yaml.loader import SafeLoader
 
 
 def parsing_files(first_file, second_file):
-    if first_file[-4:] == 'json':
-        file1 = json.load(open(first_file))
-        file2 = json.load(open(second_file))
-    if first_file[-4:] == 'yaml' or first_file[-4:] == '.yml':
-        f1 = open(first_file, 'r')
-        f2 = open(second_file, 'r')
-        file1 = yaml.load(f1, Loader=SafeLoader)
-        file2 = yaml.load(f2, Loader=SafeLoader)
-    return (file1, file2)
+
+    def parse_file(file):
+        if file[-4:] == 'json':
+            return json.load(open(file))
+        elif first_file[-4:] == 'yaml' or first_file[-4:] == '.yml':
+            return yaml.load(open(file, 'r'), Loader=SafeLoader)
+
+    return (parse_file(first_file), parse_file(second_file))

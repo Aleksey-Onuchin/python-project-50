@@ -1,7 +1,8 @@
 [tool.poetry]
 name = "hexlet-code"
 version = "0.1.0"
-description = ""
+description = "Difference Calculator. Calculates difference between two .json or .yaml files and returns it in the selected format."
+
 authors = ["Onuchin"]
 readme = "README.md"
 packages = [{include = "gendiff"}]
