@@ -40,7 +40,6 @@ def make_diff(dict_file1, dict_file2):
     file2 = prepare_file_for_diff(dict_file2)
 
     def walk(children, parents):
-        nonlocal result
         children.sort()
         for key in children:
             list1 = list(filter(lambda value: value['key'] == key and value['parents'] == parents, file1)) # noqa

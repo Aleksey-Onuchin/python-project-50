@@ -39,8 +39,6 @@ def stylish(keys, diff):
                         lines.append(f"{indent}{elem['key']}: {walk(elem['children'], elem['parents'] + '.' + elem['key'], elem['value'], marked_by)}") # noqa
                         if marked_by == elem['key']:
                             marked_by = ''
-                        else:
-                            pass
                         result = itertools.chain(
                             '{', lines, [(elem['depth'] - 1) * 4 * ' ' + '}'])
             return '\n'.join(result)
