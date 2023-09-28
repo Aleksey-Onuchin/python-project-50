@@ -1,19 +1,16 @@
 #### Hexlet tests and linter status:
 [![Actions Status](https://github.com/Aleksey-Onuchin/python-project-50/workflows/hexlet-check/badge.svg)](https://github.com/Aleksey-Onuchin/python-project-50/actions)
-
 [![Actions Status](https://github.com/Aleksey-Onuchin/python-project-50/actions/workflows/code-check.yml/badge.svg)](https://github.com/Aleksey-Onuchin/python-project-50/actions)
-
 [![Maintainability](https://api.codeclimate.com/v1/badges/885fa6645ccad79efdbb/maintainability)](https://codeclimate.com/github/Aleksey-Onuchin/python-project-50/maintainability)
-
 [![Test Coverage](https://api.codeclimate.com/v1/badges/885fa6645ccad79efdbb/test_coverage)](https://codeclimate.com/github/Aleksey-Onuchin/python-project-50/test_coverage)
 
 #### Version: python 3.10.6; poetry 1.5.1
 
 #### Description:
 Difference Calculator. Calculates difference between two .json or .yaml files and returns it in the selected format.\
-3 Formatters available:
-* Stylish formatter - tree structure with the indents, marked by +/-.
-* Plain formatter - list of changed lines, marked by statuses (added/removed/updated).
+3 Formatters are available:
+* Stylish formatter - returns tree structure with the indents, marked by +/-.
+* Plain formatter - returns list of changed lines, marked by statuses (added/removed/updated).
 * Json formatter - returns the .json file, containing the difference.
 
 Stylish formatter is the default one.
