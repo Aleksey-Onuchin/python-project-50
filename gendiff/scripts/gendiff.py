@@ -1,5 +1,5 @@
-from gendiff.app_engine.get_arguments import get_arguments
-from gendiff.app_engine.generate_diff import generate_diff
+from gendiff.get_arguments import get_arguments
+from gendiff.generate_diff import generate_diff
 
 
 def main():

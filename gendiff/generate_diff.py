@@ -1,6 +1,6 @@
-from gendiff.app_engine.parsing_module import parsing_files
-from gendiff.app_engine.make_diff import make_diff
-from gendiff.app_engine.formatter_processing import formatter_processing
+from gendiff.parsing_module import parsing_files
+from gendiff.make_diff import make_diff
+from gendiff.formatter_processing import formatter_processing
 
 
 def generate_diff(first_file, second_file, formatter='stylish'):
